@@ -1,0 +1,9 @@
+[package]
+name = "day_1"
+version = "0.1.0"
+authors = ["Tanjim Hossain <audacioustux@protonmail.com>"]
+edition = "2018"
+
+[dependencies]
+aoclib = { path = "../../../aoclib" }
+lazy_static = "1.4.0"
