@@ -1,46 +1,49 @@
 use aoclib::*;
 use itertools::Itertools;
+use lazy_static::lazy_static;
 use regex::Regex;
+use std::default::Default;
+use std::ops::{Index, IndexMut};
 use std::str::FromStr;
 
 pub struct Puzzle;
 
-#[derive(Debug)]
-pub enum PassportField {
-    BirthYear(String),
-    IssueYear(String),
-    ExpirationYear(String),
-    Height(String),
-    HairColor(String),
-    EyeColor(String),
-    PassportId(String),
-    CountryId(String),
+#[derive(Debug, Default)]
+pub struct Passport {
+    birth_year: Option<String>,
+    issue_year: Option<String>,
+    expiration_year: Option<String>,
+    height: Option<String>,
+    hair_color: Option<String>,
+    eye_color: Option<String>,
+    passport_id: Option<String>,
+    country_id: Option<String>,
 }
-impl FromStr for PassportField {
-    type Err = ();
-
-    fn from_str(input: &str) -> Result<PassportField, Self::Err> {
-        use PassportField::*;
-
-        let re = Regex::new(r"^(?P<field>\w+):(?P<value>\S*)$").or(Err(()))?;
-        let captures = re.captures(input).ok_or(())?;
-
-        let (field, value) = (&captures["field"], captures["value"].to_string());
-        match field {
-            "byr" => Ok(BirthYear(value)),
-            "iyr" => Ok(IssueYear(value)),
-            "eyr" => Ok(ExpirationYear(value)),
-            "hgt" => Ok(Height(value)),
-            "hcl" => Ok(HairColor(value)),
-            "ecl" => Ok(EyeColor(value)),
-            "pid" => Ok(PassportId(value)),
-            "cid" => Ok(CountryId(value)),
-            _ => Err(()),
+impl Passport {
+    fn new(input: &str) -> Option<Self> {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"(?P<field>\w+):(?P<value>\S*)").unwrap();
         }
+        let mut passport = Passport::default();
+
+        RE.captures_iter(input).for_each(|m| {
+            let value = Some(m["value"].to_string());
+            match &m["field"] {
+                "byr" => passport.birth_year = value,
+                "iyr" => passport.issue_year = value,
+                "eyr" => passport.expiration_year = value,
+                "hgt" => passport.height = value,
+                "hcl" => passport.hair_color = value,
+                "ecl" => passport.eye_color = value,
+                "pid" => passport.passport_id = value,
+                "cid" => passport.country_id = value,
+                _ => unreachable!(),
+            };
+        });
+
+        Some(passport)
     }
 }
-
-type Passport = Vec<PassportField>;
 
 impl InputParsable for Puzzle {
     type Input = Vec<Passport>;
@@ -50,39 +53,37 @@ impl InputParsable for Puzzle {
             .trim() // santize input
             .lines()
             .map(|line| line.trim().to_string()) // sanitize incidents
-            .group_by(|line| line != "") // group passport data, seperated by blank line
+            .group_by(|line| line.is_empty()) // group passport data, seperated by blank line
             .into_iter()
-            .filter(|(is_passport, _)| *is_passport) // filter out seperator lines
-            .map(|(_, lines)| lines) // only keep raw passport data
-            .map(|mut passports_raw| {
-                passports_raw // parse to `Passport`
-                    .join(" ") // merge all fields on a single line
-                    .split(" ") // get all the field:value pairs
-                    .map(|fields_raw| PassportField::from_str(fields_raw).unwrap()) // serialize to `PassportField`
-                    .collect::<Passport>()
-            })
+            .map(|(_, mut lines)| lines.join(" "))
+            .filter(|lines| !lines.is_empty())
+            .filter_map(|passport_lines| Passport::new(&passport_lines))
             .collect())
     }
 }
 
 impl Solvable for Puzzle {
-    type Solution1 = usize;
-
     fn part_one(input: &Self::Input) -> Option<Self::Solution1> {
         Some(
             input
                 .iter()
-                .filter(|passport| {
-                    passport
-                        .iter()
-                        .filter(|field| match field {
-                            PassportField::CountryId(_) => true,
-                            _ => false,
-                        })
-                        .next()
-                        .is_some()
+                .inspect(|x| {
+                    dbg!(x);
                 })
-                .count(),
+                .filter(|passport| {
+                    [
+                        &passport.birth_year,
+                        &passport.issue_year,
+                        &passport.expiration_year,
+                        &passport.height,
+                        &passport.hair_color,
+                        &passport.eye_color,
+                        &passport.passport_id,
+                    ]
+                    .iter()
+                    .all(|v| v.is_some())
+                })
+                .count() as u32,
         )
     }
 }
