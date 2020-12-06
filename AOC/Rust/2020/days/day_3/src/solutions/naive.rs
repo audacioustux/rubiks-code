@@ -8,8 +8,7 @@ impl InputParsable for Puzzle {
         Ok(raw_input
             .trim()
             .lines()
-            .map(|line| line.trim())
-            .map(|row| row.to_string())
+            .map(|line| line.trim().to_string())
             .collect())
     }
 }
