@@ -3,7 +3,7 @@
 use std::error::Error;
 use std::fmt::Display;
 
-type BoxError = Box<dyn Error + Send + Sync>;
+pub type BoxError = Box<dyn Error + Send + Sync>;
 pub type Result<T, E = BoxError> = std::result::Result<T, E>;
 
 pub trait InputParsable {
@@ -15,11 +15,11 @@ pub trait Solvable: InputParsable {
     type Solution1: Display = u32;
     type Solution2: Display = u32;
 
-    fn part_one(_: &Self::Input) -> Option<Self::Solution1> {
+    fn part_one(_input: &Self::Input) -> Option<Self::Solution1> {
         None
     }
 
-    fn part_two(_: &Self::Input) -> Option<Self::Solution2> {
+    fn part_two(_input: &Self::Input) -> Option<Self::Solution2> {
         None
     }
 

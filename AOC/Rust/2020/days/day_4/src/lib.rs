@@ -1,3 +1,3 @@
-#![feature(associated_type_defaults)]
+#![feature(bool_to_option)]
 
 pub mod solutions;
