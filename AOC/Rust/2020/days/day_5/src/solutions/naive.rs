@@ -28,8 +28,6 @@ impl InputParsable for Puzzle {
 }
 
 impl Solvable for Puzzle {
-    type Solution1 = u32;
-
     fn part_one(input: &Self::Input) -> Option<Self::Solution1> {
         input.iter().max().map(|n| *n)
     }
