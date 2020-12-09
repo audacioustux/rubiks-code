@@ -31,6 +31,6 @@ pub mod part_two {
 
     #[test]
     fn example_1() {
-        assert_eq!(Puzzle::solve(&EXAMPLE_INPUT_1).unwrap().0, Some(6))
+        assert_eq!(Puzzle::solve(&EXAMPLE_INPUT_1).unwrap().1, Some(6))
     }
 }
