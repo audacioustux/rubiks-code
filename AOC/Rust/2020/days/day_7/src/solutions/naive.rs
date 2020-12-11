@@ -7,6 +7,11 @@ use std::collections::HashSet;
 
 pub struct Puzzle;
 
+lazy_static! {
+    static ref CONTAINER_RE: Regex = Regex::new(r"^(?P<color>.*) bags").unwrap();
+    static ref CONTAINS_RE: Regex = Regex::new(r"^(?P<amount>\d+) (?P<color>.*) bags?\.?").unwrap();
+}
+
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct Bag {
     color: String,
@@ -23,10 +28,6 @@ impl InputParsable for Puzzle {
             .fold(
                 Self::Input::new(),
                 |mut rules, (container_str, contains_str)| {
-                    lazy_static! {
-                        static ref CONTAINER_RE: Regex =
-                            Regex::new(r"^(?P<color>.*) bags").unwrap();
-                    }
                     let m = CONTAINER_RE.captures(container_str).unwrap();
                     let container_bag_color = &m["color"];
 
@@ -35,12 +36,7 @@ impl InputParsable for Puzzle {
                         contains_strs.iter().map(|s| s.trim_start()).fold(
                             Vec::with_capacity(contains_str.len()),
                             |mut acc_map, curr| {
-                                lazy_static! {
-                                    static ref CONTAINER_RE: Regex =
-                                        Regex::new(r"^(?P<amount>\d+) (?P<color>.*) bags?\.?")
-                                            .unwrap();
-                                }
-                                if let Some(m) = CONTAINER_RE.captures(curr) {
+                                if let Some(m) = CONTAINS_RE.captures(curr) {
                                     let (amount, color) = (&m["amount"], &m["color"]);
 
                                     acc_map.push(Bag {
@@ -52,6 +48,7 @@ impl InputParsable for Puzzle {
                             },
                         )
                     };
+
                     rules.insert(container_bag_color.to_owned(), bags);
                     rules
                 },
