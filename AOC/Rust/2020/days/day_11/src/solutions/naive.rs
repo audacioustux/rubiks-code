@@ -1,6 +1,8 @@
 use aoclib::*;
+use crossterm::{cursor, queue, style::Print};
 use itertools::Itertools;
 use std::convert::TryInto;
+use std::io::{Stdout, Write};
 
 pub struct Puzzle;
 
@@ -25,7 +27,11 @@ impl Solvable for Puzzle {
         Some(Self::count_occupied(&Self::update(input)))
     }
     fn part_two(input: &Self::Input) -> Option<Self::Solution1> {
-        Some(Self::count_occupied(&Self::update2(input)))
+        crossterm::terminal::enable_raw_mode().unwrap();
+        let stdout = std::io::stdout();
+        let r = Self::count_occupied(&Self::update2(input, stdout));
+        crossterm::terminal::disable_raw_mode().unwrap();
+        Some(r)
     }
 }
 
@@ -49,7 +55,7 @@ impl Puzzle {
         }
         Self::update(&new_grid)
     }
-    fn update2(grid: &Grid) -> Grid {
+    fn update2(grid: &Grid, mut stdout: Stdout) -> Grid {
         let mut new_grid = grid.clone();
 
         for (row_num, row) in grid.iter().enumerate() {
@@ -62,20 +68,31 @@ impl Puzzle {
                 };
             }
         }
-        Self::print_grid(&new_grid);
+        Self::print_grid(&new_grid, &mut stdout);
         if grid == &new_grid {
             return new_grid;
         }
-        Self::update2(&new_grid)
+        Self::update2(&new_grid, stdout)
     }
 
-    fn print_grid(grid: &Grid) {
+    fn print_grid(grid: &Grid, stdout: &mut Stdout) {
         for row in grid.iter() {
             for cell in row.iter() {
-                print!("{}", cell)
+                queue!(
+                    stdout,
+                    Print(match cell {
+                        '#' => '■',
+                        'L' => '.',
+                        _ => ' ',
+                    })
+                )
+                .unwrap();
             }
-            println!()
+            queue!(stdout, Print("\r\n".to_string())).unwrap();
         }
+        queue!(stdout, cursor::MoveTo(0, 0)).unwrap();
+        stdout.flush().unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(100));
     }
 
     fn count_cansee_occupied(grid: &Grid, row_num: usize, col_num: usize) -> u32 {
