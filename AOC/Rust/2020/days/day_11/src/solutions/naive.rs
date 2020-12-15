@@ -62,7 +62,7 @@ impl Puzzle {
                 };
             }
         }
-        Self::print_grid(&new_grid);
+        // Self::print_grid(&new_grid);
         if grid == &new_grid {
             return new_grid;
         }
