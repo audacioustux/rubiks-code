@@ -8,7 +8,7 @@ pub struct Puzzle;
 //  W
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Direction {
-    North = 0,
+    North,
     East,
     South,
     West,
@@ -17,12 +17,25 @@ enum Direction {
 impl Direction {
     pub fn right(&self, times: u64) -> Self {
         use Direction::*;
-        [North, East, South, West][(*self as u64 + times) as usize % 4]
+        *[North, East, South, West]
+            .iter()
+            .cycle()
+            .skip_while(|d| *d != self)
+            .skip(times as usize)
+            .next()
+            .unwrap()
     }
 
     pub fn left(&self, times: u64) -> Self {
         use Direction::*;
-        [North, East, South, West][(*self as u64 + times + 2) as usize % 4]
+        *[North, East, South, West]
+            .iter()
+            .rev()
+            .cycle()
+            .skip_while(|d| *d != self)
+            .skip(times as usize)
+            .next()
+            .unwrap()
     }
 }
 
@@ -204,5 +217,11 @@ mod direction_tests {
     fn south_west() {
         use Direction::*;
         assert_eq!(South.left(3), West);
+    }
+
+    #[test]
+    fn south_east() {
+        use Direction::*;
+        assert_eq!(South.right(3), East);
     }
 }
