@@ -1,8 +1,8 @@
 use aoclib::*;
 use itertools::*;
 use lazy_static::lazy_static;
-use std::collections::HashSet;
-use std::str::FromStr;
+
+
 
 pub struct Puzzle;
 
@@ -62,12 +62,11 @@ impl Puzzle {
                 xmas_input
                     .windows(window_size)
                     .map(|window| window.iter())
-                    .skip_while(|window| window.as_ref().into_iter().sum::<u64>() != n)
+                    .skip_while(|window| window.as_ref().iter().sum::<u64>() != n)
                     .map(|window| {
-                        window.as_ref().into_iter().min().unwrap()
-                            + window.as_ref().into_iter().max().unwrap()
-                    })
-                    .nth(0)
+                        window.as_ref().iter().min().unwrap()
+                            + window.as_ref().iter().max().unwrap()
+                    }).next()
             })
             .unwrap()
     }

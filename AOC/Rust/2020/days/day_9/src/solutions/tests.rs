@@ -1,7 +1,7 @@
 use super::Puzzle;
 use aoclib::*;
 
-const EXAMPLE_DATA_1: &'static str = "
+const EXAMPLE_DATA_1: &str = "
 35
 20
 15
@@ -37,5 +37,5 @@ pub mod part_one {
 }
 
 pub mod part_two {
-    use super::*;
+    
 }

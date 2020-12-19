@@ -1,7 +1,7 @@
 use super::Puzzle;
 use aoclib::*;
 
-const EXAMPLE_DATA_1: &'static str = "
+const EXAMPLE_DATA_1: &str = "
 light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
 bright white bags contain 1 shiny gold bag.
@@ -13,7 +13,7 @@ faded blue bags contain no other bags.
 dotted black bags contain no other bags.
 ";
 
-const EXAMPLE_DATA_2: &'static str = "
+const EXAMPLE_DATA_2: &str = "
 shiny gold bags contain 2 dark red bags.
 dark red bags contain 2 dark orange bags.
 dark orange bags contain 2 dark yellow bags.

@@ -77,8 +77,8 @@ fn find_bag_ancestors<'a>(
         .filter(|(_, contains)| contains.iter().any(|b| b.color == color)) // filter bags that contain `color` type bag
         .fold(HashSet::new(), |mut acc_set, (color, _)| {
             acc_set.insert(color);
-            let ancestor = HashSet::from(find_bag_ancestors(&haystack, color));
-            ancestor.union(&acc_set).map(|x| *x).collect()
+            let ancestor = find_bag_ancestors(&haystack, color);
+            ancestor.union(&acc_set).copied().collect()
         })
 }
 

@@ -21,7 +21,7 @@ impl InputParsable for Puzzle {
             .map(|seat| seat.row * 8 + seat.col)
             .collect::<Self::Input>();
 
-        input.sort();
+        input.sort_unstable();
 
         Ok(input)
     }
@@ -29,7 +29,7 @@ impl InputParsable for Puzzle {
 
 impl Solvable for Puzzle {
     fn part_one(input: &Self::Input) -> Option<Self::Solution1> {
-        input.iter().max().map(|n| *n)
+        input.iter().max().copied()
     }
     fn part_two(input: &Self::Input) -> Option<Self::Solution2> {
         input

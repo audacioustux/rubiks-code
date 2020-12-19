@@ -20,9 +20,7 @@ impl Direction {
         *[North, East, South, West]
             .iter()
             .cycle()
-            .skip_while(|d| *d != self)
-            .skip(times as usize)
-            .next()
+            .skip_while(|d| *d != self).nth(times as usize)
             .unwrap()
     }
 
@@ -32,9 +30,7 @@ impl Direction {
             .iter()
             .rev()
             .cycle()
-            .skip_while(|d| *d != self)
-            .skip(times as usize)
-            .next()
+            .skip_while(|d| *d != self).nth(times as usize)
             .unwrap()
     }
 }
@@ -54,7 +50,7 @@ impl Ship {
             mut east,
             mut south,
             mut direction,
-        } = self.clone();
+        } = *self;
 
         let NavInstruction { action, value } = *nav_ins;
 
@@ -90,7 +86,7 @@ impl TryFrom<&str> for NavInstruction {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let (action, value) = value.split_at(1);
         Ok(Self {
-            action: action.chars().nth(0).ok_or(())?,
+            action: action.chars().next().ok_or(())?,
             value: value.parse().map_err(|_| ())?,
         })
     }

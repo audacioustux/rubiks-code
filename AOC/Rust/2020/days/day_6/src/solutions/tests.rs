@@ -1,7 +1,7 @@
 use super::Puzzle;
 use aoclib::*;
 
-const EXAMPLE_INPUT_1: &'static str = "abc
+const EXAMPLE_INPUT_1: &str = "abc
 
 a
 b

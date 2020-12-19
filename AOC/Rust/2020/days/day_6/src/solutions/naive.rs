@@ -50,8 +50,7 @@ impl Solvable for Puzzle {
                         .map(|p_ans| p_ans.chars().collect::<HashSet<char>>())
                         .fold_first(|prev_common_answers, answers| {
                             prev_common_answers
-                                .intersection(&answers)
-                                .map(|c| *c)
+                                .intersection(&answers).copied()
                                 .collect()
                         })
                 })
