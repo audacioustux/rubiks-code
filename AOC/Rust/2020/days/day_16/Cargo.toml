@@ -1,0 +1,14 @@
+[package]
+name = "day_16"
+version = "0.1.0"
+authors = ["Tanjim Hossain <audacioustux@protonmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aoclib = { path = "../../../aoclib" }
+lazy_static = "1.4"
+itertools = "0.9"
+regex = "1"
+
