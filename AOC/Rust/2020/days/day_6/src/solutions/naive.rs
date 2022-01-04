@@ -48,9 +48,10 @@ impl Solvable for Puzzle {
                     group
                         .split_whitespace()
                         .map(|p_ans| p_ans.chars().collect::<HashSet<char>>())
-                        .fold_first(|prev_common_answers, answers| {
+                        .fold1(|prev_common_answers, answers| {
                             prev_common_answers
-                                .intersection(&answers).copied()
+                                .intersection(&answers)
+                                .copied()
                                 .collect()
                         })
                 })

@@ -5,4 +5,3 @@ members = [ "days/*" ]
 lto = true
 panic = 'abort'
 codegen-units = 1
-

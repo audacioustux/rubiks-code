@@ -20,7 +20,8 @@ impl Direction {
         *[North, East, South, West]
             .iter()
             .cycle()
-            .skip_while(|d| *d != self).nth(times as usize)
+            .skip_while(|d| *d != self)
+            .nth(times as usize)
             .unwrap()
     }
 
@@ -30,7 +31,8 @@ impl Direction {
             .iter()
             .rev()
             .cycle()
-            .skip_while(|d| *d != self).nth(times as usize)
+            .skip_while(|d| *d != self)
+            .nth(times as usize)
             .unwrap()
     }
 }
