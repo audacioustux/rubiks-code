@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 pub struct Solution;
 
@@ -11,17 +11,18 @@ impl Solution {
 
         let [s1, s2, s3]: [Vec<char>; 3] = [s1, s2, s3].map(|string| string.chars().collect());
 
-        let mut cache: HashMap<(usize, usize), bool> = HashMap::new();
+        let mut cache: HashSet<(usize, usize)> = HashSet::new();
 
-        cache.insert((l1, l2), true);
+        cache.insert((l1, l2));
 
         for i1 in (0..=l1).rev() {
             for i2 in (0..=l2).rev() {
-                if i1 < l1 && s1[i1] == s3[i1 + i2] && cache.get(&(i1 + 1, i2)).is_some() {
-                    cache.insert((i1, i2), true);
-                }
-                if i2 < l2 && s2[i2] == s3[i1 + i2] && cache.get(&(i1, i2 + 1)).is_some() {
-                    cache.insert((i1, i2), true);
+                let i3 = i1 + i2;
+
+                if i1 < l1 && s1[i1] == s3[i3] && cache.get(&(i1 + 1, i2)).is_some() {
+                    cache.insert((i1, i2));
+                } else if i2 < l2 && s2[i2] == s3[i3] && cache.get(&(i1, i2 + 1)).is_some() {
+                    cache.insert((i1, i2));
                 }
             }
         }
