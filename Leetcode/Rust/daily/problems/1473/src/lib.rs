@@ -8,73 +8,69 @@ impl Solution {
         let target = target as usize;
 
         (1..=n)
-            .filter_map(|i| Self::dp(m, i, target, &mut HashMap::new(), &houses, &cost, n))
+            .filter_map(|color| Self::dp(m, n, color, target, &mut HashMap::new(), &houses, &cost))
             .min()
             .unwrap_or(-1)
     }
 
     fn dp(
-        size: usize,
+        num_of_house: usize,
+        num_of_color: i32,
         color: i32,
         target: usize,
-        memo: &mut HashMap<(usize, i32, usize), Option<i32>>,
+        cache: &mut HashMap<(usize, i32, usize), Option<i32>>,
         houses: &[i32],
         cost: &[Vec<i32>],
-        n: i32,
     ) -> Option<i32> {
         if target < 1 {
             return None;
         }
-        if size < target {
+        if num_of_house < target {
             return None;
         }
-        if houses[size - 1] != 0 && color != houses[size - 1] {
+        if houses[num_of_house - 1] != 0 && color != houses[num_of_house - 1] {
             return None;
         }
-        if size == 1 {
+        if num_of_house == 1 {
             if target == 1 {
                 if houses[0] == 0 {
                     Some(cost[0][(color - 1) as usize])
                 } else {
-                    if houses[0] == color {
-                        Some(0)
-                    } else {
-                        None
-                    }
+                    (houses[0] == color).then_some(0)
                 }
             } else {
                 None
             }
         } else {
-            if let Some(&res) = memo.get(&(size, color, target)) {
-                return res;
+            if let Some(&min_cost) = cache.get(&(num_of_house, color, target)) {
+                return min_cost;
             }
 
             let mut min = i32::MAX;
-            let x = if houses[size - 1] == 0 {
-                cost[size - 1][(color - 1) as usize]
+            let x = if houses[num_of_house - 1] == 0 {
+                cost[num_of_house - 1][(color - 1) as usize]
             } else {
                 0
             };
 
-            for i in 1..=n {
+            for i in 1..=num_of_color {
                 if let Some(y) = Self::dp(
-                    size - 1,
+                    num_of_house - 1,
+                    num_of_color,
                     i,
                     if i == color { target } else { target - 1 },
-                    memo,
+                    cache,
                     houses,
                     cost,
-                    n,
                 ) {
                     min = min.min(x + y);
                 }
             }
-            let res = if min == i32::MAX { None } else { Some(min) };
+            let min_cost = if min == i32::MAX { None } else { Some(min) };
 
-            memo.insert((size, color, target), res);
+            cache.insert((num_of_house, color, target), min_cost);
 
-            res
+            min_cost
         }
     }
 }
