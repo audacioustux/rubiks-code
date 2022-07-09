@@ -5,3 +5,4 @@ members = [ "problems/*" ]
 lto = true
 panic = 'abort'
 codegen-units = 1
+
