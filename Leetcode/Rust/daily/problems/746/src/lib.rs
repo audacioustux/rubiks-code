@@ -5,7 +5,9 @@ impl Solution {
         let (_, min_cost) = cost
             .iter()
             .chain(&[0])
-            .fold((0, 0), |(x, y), t| (y, t + x.min(y)));
+            .fold((0, 0), |(prev_min, curr_min), cost| {
+                (curr_min, cost + prev_min.min(curr_min))
+            });
 
         min_cost
     }
