@@ -83,4 +83,19 @@ mod tests {
         let expected = [1, 3];
         assert_eq!(Solution::right_side_view(root), expected);
     }
+
+    #[test]
+    fn testcase_3() {
+        let root = Some(Rc::new(RefCell::new(TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(TreeNode {
+                val: 3,
+                left: None,
+                right: None,
+            }))),
+            right: None,
+        })));
+        let expected = [1, 3];
+        assert_eq!(Solution::right_side_view(root), expected);
+    }
 }
