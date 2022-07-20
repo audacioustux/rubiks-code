@@ -29,4 +29,15 @@ impl Solution {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn testcase_1() {
+        let s = "abcde".to_owned();
+        let words = ["a", "bb", "acd", "ace"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+        let result = 3;
+        assert_eq!(Solution::num_matching_subseq(s, words), result);
+    }
 }
