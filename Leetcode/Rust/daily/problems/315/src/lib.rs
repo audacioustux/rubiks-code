@@ -40,7 +40,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
+    fn testcase_1() {
         let nums = vec![5, 2, 6, 1];
         let result = vec![2, 1, 1, 0];
         assert_eq!(Solution::count_smaller(nums), result);
